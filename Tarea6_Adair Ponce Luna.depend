@@ -1,0 +1,30 @@
+# depslib dependency file v1.0
+1666229271 source:d:\codeblocks\mingw\proyectos\tarea6_adair ponce luna\main.cpp
+	"3D_bib.h"
+	<GL/glut.h>
+
+1666229271 d:\codeblocks\mingw\proyectos\tarea6_adair ponce luna\include\3d_bib.h
+	<stdlib.h>
+	<stdio.h>
+	<math.h>
+	<time.h>
+
+1426374928 d:\codeblocks\mingw\include\gl\glut.h
+	"freeglut_std.h"
+
+1426374928 d:\codeblocks\mingw\include\gl\freeglut_std.h
+	<windows.h>
+	<EGL/egl.h>
+	<GLES/gl.h>
+	<GLES2/gl2.h>
+	<OpenGL/gl.h>
+	<OpenGL/glu.h>
+	<GL/gl.h>
+	<GL/glu.h>
+	<stdlib.h>
+
+1666229271 source:d:\codeblocks\mingw\proyectos\tarea6_adair ponce luna\src\3d_bib.cpp
+	"3D_bib.h"
+	<iterator>
+	<cmath>
+

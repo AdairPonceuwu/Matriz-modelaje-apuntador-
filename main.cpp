@@ -1,177 +1,226 @@
-/*
- * GLUT Shapes Demo
- *
- * Written by Nigel Stewart November 2003
- *
- * This program is test harness for the sphere, cone
- * and torus shapes in GLUT.
- *
- * Spinning wireframe and smooth shaded shapes are
- * displayed until the ESC or q key is pressed.  The
- * number of geometry stacks and slices can be adjusted
- * using the + and - keys.
- */
-
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#else
+#include "3D_bib.h"
 #include <GL/glut.h>
-#endif
 
-#include <stdlib.h>
+//Variables dimensiones de la pantalla
+int WIDTH=500;
+int HEIGTH=500;
+//Variables para establecer los valores de gluPerspective
+float FOVY=60.0;
+float ZNEAR=0.01;
+float ZFAR=100.0;
+//Variables para definir la posicion del observador
+//gluLookAt(EYE_X,EYE_Y,EYE_Z,CENTER_X,CENTER_Y,CENTER_Z,UP_X,UP_Y,UP_Z)
+float EYE_X=10.0;
+float EYE_Y=5.0;
+float EYE_Z=10.0;
+float CENTER_X=0;
+float CENTER_Y=0;
+float CENTER_Z=0;
+float UP_X=0;
+float UP_Y=1;
+float UP_Z=0;
+//Variables para dibujar los ejes del sistema
+float X_MIN=-20;
+float X_MAX=20;
+float Y_MIN=-20;
+float Y_MAX=20;
+float Z_MIN=-100;
+float Z_MAX=20;
 
-static int slices = 16;
-static int stacks = 16;
+//Se declara el objeto para utilizar las operaciones 3D
+Operaciones3D Op3D;
 
-/* GLUT callback Handlers */
+float Theta=0;
+//Variables para la definicion de objetos
+float P1[3]={0.0,0.0,0.0};
+float P2[3]={10.0,0.0,0.0};
+float points[5][3]={{0,0,2},{2,0,2},{2,0,0},{0,0,0},{1,1.5,1}};
 
-static void resize(int width, int height)
+
+void drawAxis()
 {
-    const float ar = (float) width / (float) height;
+     glShadeModel(GL_SMOOTH);
+     glLineWidth(3.0);
+     //X axis in red
+     glBegin(GL_LINES);
+       glColor3f(1.0f,0.0f,0.0f);
+       glVertex3f(X_MIN,0.0,0.0);
+       glColor3f(0.5f,0.0f,0.0f);
+       glVertex3f(X_MAX,0.0,0.0);
+     glEnd();
+     //Y axis in green
+     glColor3f(0.0f,1.0f,0.0f);
+     glBegin(GL_LINES);
+       glColor3f(0.0f,1.0f,0.0f);
+       glVertex3f(0.0,Y_MIN,0.0);
+       glColor3f(0.0f,0.5f,0.0f);
+       glVertex3f(0.0,Y_MAX,0.0);
+     glEnd();
+     //Z axis in blue
+     glBegin(GL_LINES);
+       glColor3f(0.0f,0.0f,1.0f);
+       glVertex3f(0.0,0.0,Z_MIN);
+       glColor3f(0.0f,0.0f,0.5f);
+       glVertex3f(0.0,0.0,Z_MAX);
+     glEnd();
+     glLineWidth(1.0);
+ }
 
-    glViewport(0, 0, width, height);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glFrustum(-ar, ar, -1.0, 1.0, 2.0, 100.0);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity() ;
+/////////////////////////////////////////////////////////////////////////////
+//funciones de objetos
+/////////////////////////////////////////////////////////////////////////////
+float Norma(float p1[3], float p2[3])
+{
+      float n=0;
+      int i;
+      for(i=0;i<3;i++)
+        n += pow(p2[i]-p1[i],2);
+      return(sqrt(n));
 }
 
-static void display(void)
+void ImprimeMallaPiramide(int k)
 {
-    const double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
-    const double a = t*90.0;
+     int i,j;
+     float U[3],d,norma;
+     for(i=0;i<3;i++)
+     {
+        norma = Norma(points[i],points[i+1]);
+        d = norma/(float)k;
+        U[0] = (points[i+1][0]-points[i][0])/norma;
+        U[1] = (points[i+1][1]-points[i][1])/norma;
+        U[2] = (points[i+1][2]-points[i][2])/norma;
+        for(j = 1; j < k; j++)
+        {
+           glBegin(GL_LINES);
+             glVertex3f(points[4][0],points[4][1],points[4][2]);
+             glVertex3f(points[i][0]+U[0]*d*j,points[i][1]+U[1]*d*j,points[i][2]+U[2]*d*j);
+           glEnd();
+        }
+     }
+     norma = Norma(points[i],points[0]);
+     d = norma /(float)k;
+     U[0] = (points[0][0]-points[i][0])/norma;
+     U[1] = (points[0][1]-points[i][1])/norma;
+     U[2] = (points[0][2]-points[i][2])/norma;
+     for(j = 1; j < k; j++)
+        {
+           glBegin(GL_LINES);
+             glVertex3f(points[4][0],points[4][1],points[4][2]);
+             glVertex3f(points[i][0]+U[0]*d*j,points[i][1]+U[1]*d*j,points[i][2]+U[2]*d*j);
+           glEnd();
+        }
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glColor3d(1,0,0);
+}
 
-    glPushMatrix();
-        glTranslated(-2.4,1.2,-6);
-        glRotated(60,1,0,0);
-        glRotated(a,0,0,1);
-        glutSolidSphere(1,slices,stacks);
-    glPopMatrix();
+void ImprimePiramide()
+{   int i;
+    glBegin(GL_LINE_LOOP);
+      for(i=0;i<4;i++)
+        glVertex3f(points[i][0],points[i][1],points[i][2]);
+    glEnd();
+    glBegin(GL_LINES);
+      for(i=0;i<4;i++){
+        glVertex3f(points[4][0],points[4][1],points[4][2]);
+        glVertex3f(points[i][0],points[i][1],points[i][2]);
+        }
+    glEnd();
+    ImprimeMallaPiramide(20);
+ }
 
-    glPushMatrix();
-        glTranslated(0,1.2,-6);
-        glRotated(60,1,0,0);
-        glRotated(a,0,0,1);
-        glutSolidCone(1,1,slices,stacks);
-    glPopMatrix();
 
-    glPushMatrix();
-        glTranslated(2.4,1.2,-6);
-        glRotated(60,1,0,0);
-        glRotated(a,0,0,1);
-        glutSolidTorus(0.2,0.8,slices,stacks);
-    glPopMatrix();
+//Rotacion paralela
+//rota a la piramide theta grados, donde el eje de rotacion se encuentra
+//a una distancia distA-distB del eje seleccionado (ejeXYZ)
+void RotacionPiramide(char ejeXYZ, float theta, float distA, float distB)
+{
+     //se prepara la matriz de operaciones A: T^(-1)R(T)
+     Op3D.RotacionParalela(ejeXYZ,theta,distA,distB);
+     //se aplica A a cada punto de la piramide
+     Op3D.MatObject(Op3D.A,5,points);
+}
 
-    glPushMatrix();
-        glTranslated(-2.4,-1.2,-6);
-        glRotated(60,1,0,0);
-        glRotated(a,0,0,1);
-        glutWireSphere(1,slices,stacks);
-    glPopMatrix();
+//Rotacion libre
+void RotacionPiramide(float theta, float p1[3], float p2[3])
+{
+     //se imprime el eje de rotacion
+     glColor3f(1.0,1.0,1.0);
+     glBegin(GL_LINES);
+       glVertex3f(p1[0],p1[1],p1[2]);
+       glVertex3f(p2[0],p2[1],p2[2]);
+     glEnd();
+    glColor3f(1.0,1.0,1.0);
+    Op3D.RotacionLibre(theta,p1,p2);
+    Op3D.MatObject(Op3D.A,5,points);
+}
 
-    glPushMatrix();
-        glTranslated(0,-1.2,-6);
-        glRotated(60,1,0,0);
-        glRotated(a,0,0,1);
-        glutWireCone(1,1,slices,stacks);
-    glPopMatrix();
+//-------------------------------------------------------------------------
+//funciones callbacks
+void idle(void)
+{
+  glutPostRedisplay();
+}
 
-    glPushMatrix();
-        glTranslated(2.4,-1.2,-6);
-        glRotated(60,1,0,0);
-        glRotated(a,0,0,1);
-        glutWireTorus(0.2,0.8,slices,stacks);
-    glPopMatrix();
+void reshape(int width, int height)
+{
+    glViewport(0, 0, width, height);
+}
+//TeclasZ
+/*static void keys(unsigned char key, int x, int y)
+{
+    switch(key){
+                case 'u':
+                     Theta=1;
+                     break;
+                case 'd':
+                     Theta=-1;
+                     break;
+                default:
+                     Theta = 0;
+                     break;
+    }
+    glutPostRedisplay();
+}*/
+//--------------------------------------------------------------------------
 
+void display()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawAxis();
+    glColor3f(1.0f,1.0f,1.0f);
+    //se rota la piramide Theta grados con respecto al eje de rotacion
+    //a una distancia definida por el usuario
+    RotacionPiramide(Theta,P1,P2);
+    //Rotacion paralela
+    //RotacionPiramide('Z',Theta,0,0);
+    ImprimePiramide();
     glutSwapBuffers();
 }
 
-
-static void key(unsigned char key, int x, int y)
+void init()
 {
-    switch (key)
-    {
-        case 27 :
-        case 'q':
-            exit(0);
-            break;
-
-        case '+':
-            slices++;
-            stacks++;
-            break;
-
-        case '-':
-            if (slices>3 && stacks>3)
-            {
-                slices--;
-                stacks--;
-            }
-            break;
-    }
-
-    glutPostRedisplay();
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(FOVY, (GLfloat)WIDTH/HEIGTH, ZNEAR, ZFAR);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(EYE_X,EYE_Y,EYE_Z,CENTER_X,CENTER_Y,CENTER_Z,UP_X,UP_Y,UP_Z);
+    glClearColor(0,0,0,0);
+    Theta=1;
 }
 
-static void idle(void)
-{
-    glutPostRedisplay();
-}
-
-const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
-const GLfloat light_diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
-const GLfloat light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-const GLfloat light_position[] = { 2.0f, 5.0f, 5.0f, 0.0f };
-
-const GLfloat mat_ambient[]    = { 0.7f, 0.7f, 0.7f, 1.0f };
-const GLfloat mat_diffuse[]    = { 0.8f, 0.8f, 0.8f, 1.0f };
-const GLfloat mat_specular[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
-const GLfloat high_shininess[] = { 100.0f };
-
-/* Program entry point */
-
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
     glutInit(&argc, argv);
-    glutInitWindowSize(640,480);
-    glutInitWindowPosition(10,10);
-    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
-
-    glutCreateWindow("GLUT Shapes");
-
-    glutReshapeFunc(resize);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitWindowPosition(50, 50);
+    glutInitWindowSize(WIDTH, HEIGTH);
+    glutCreateWindow("Triangulo a color");
+    init();
     glutDisplayFunc(display);
-    glutKeyboardFunc(key);
     glutIdleFunc(idle);
-
-    glClearColor(1,1,1,1);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-
-    glEnable(GL_LIGHT0);
-    glEnable(GL_NORMALIZE);
-    glEnable(GL_COLOR_MATERIAL);
-    glEnable(GL_LIGHTING);
-
-    glLightfv(GL_LIGHT0, GL_AMBIENT,  light_ambient);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE,  light_diffuse);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-
-    glMaterialfv(GL_FRONT, GL_AMBIENT,   mat_ambient);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE,   mat_diffuse);
-    glMaterialfv(GL_FRONT, GL_SPECULAR,  mat_specular);
-    glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
-
+    //glutKeyboardFunc(keys);
+    glutReshapeFunc(reshape);
     glutMainLoop();
-
-    return EXIT_SUCCESS;
+    return 0;
 }
+
