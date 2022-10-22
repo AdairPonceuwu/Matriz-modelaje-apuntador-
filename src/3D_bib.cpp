@@ -1,4 +1,3 @@
-
 #include "3D_bib.h"
 #include <iterator>
 #include <cmath>
@@ -34,6 +33,18 @@ void Operaciones3D::LoadIdentity(float M[][4])
       else
          M[i][j]=0;
  }
+
+ void Operaciones3D::LoadIdentity()
+{
+  int i,j;
+  for(i=0;i<4;i++)
+    for(j=0;j<4;j++)
+      if(i==j)
+         A[i][j]=1;
+      else
+         A[i][j]=0;
+ }
+
 
 void Operaciones3D::translate(float x, float y, float z)
 {
@@ -241,5 +252,32 @@ void Operaciones3D::RotacionLibre(float theta, float p1[3], float p2[3])
         translate(p1[0],p1[1],p1[2]);//Creacion de T INVERSA
         MultM(T,A,A);
     }
+}
+
+void Operaciones3D::copia_R_A()
+{
+
+}
+
+void Operaciones3D::Push()
+{
+    int i,j;
+    Matriz *objM = new Matriz();
+    for(i=0; i<4; i++)
+        for(j=0; j<4; j++)
+                objM->M[i][j]=A[i][j];
+
+    pila.push(objM);
+}
+
+void Operaciones3D::Pop()
+{
+    int i,j;
+    Matriz *tmp = new Matriz();
+    tmp=pila.top();
+    for(i=0; i<4; i++)
+        for(j=0; j<4; j++)
+                A[i][j]=tmp->M[i][j];
+    pila.pop();
 }
 

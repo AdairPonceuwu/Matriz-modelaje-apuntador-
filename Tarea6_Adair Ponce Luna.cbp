@@ -2,7 +2,7 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="Tarea5_Adair Ponce Luna" />
+		<Option title="Tarea6_Adair Ponce Luna" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
@@ -45,8 +45,10 @@
 			<Add directory="D:/CodeBlocks/MinGW/lib" />
 		</Linker>
 		<Unit filename="include/3D_bib.h" />
+		<Unit filename="include/Piramide.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/3D_bib.cpp" />
+		<Unit filename="src/Piramide.cpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

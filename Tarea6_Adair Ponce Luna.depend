@@ -1,13 +1,16 @@
 # depslib dependency file v1.0
-1666229271 source:d:\codeblocks\mingw\proyectos\tarea6_adair ponce luna\main.cpp
+1666398547 source:d:\codeblocks\mingw\proyectos\tarea6_adair ponce luna\main.cpp
 	"3D_bib.h"
+	"Piramide.h"
 	<GL/glut.h>
 
-1666229271 d:\codeblocks\mingw\proyectos\tarea6_adair ponce luna\include\3d_bib.h
+1666383749 d:\codeblocks\mingw\proyectos\tarea6_adair ponce luna\include\3d_bib.h
 	<stdlib.h>
 	<stdio.h>
 	<math.h>
 	<time.h>
+	<stack>
+	"iostream"
 
 1426374928 d:\codeblocks\mingw\include\gl\glut.h
 	"freeglut_std.h"
@@ -23,8 +26,20 @@
 	<GL/glu.h>
 	<stdlib.h>
 
-1666229271 source:d:\codeblocks\mingw\proyectos\tarea6_adair ponce luna\src\3d_bib.cpp
+1666380050 source:d:\codeblocks\mingw\proyectos\tarea6_adair ponce luna\src\3d_bib.cpp
 	"3D_bib.h"
 	<iterator>
 	<cmath>
+
+1666400489 source:d:\codeblocks\mingw\proyectos\tarea6_adair ponce luna\src\piramide.cpp
+	"Piramide.h"
+	"3D_bib.h"
+
+1666398547 d:\codeblocks\mingw\proyectos\tarea6_adair ponce luna\include\piramide.h
+	<stdlib.h>
+	<stdio.h>
+	<math.h>
+	<GL/glut.h>
+	"iostream"
+	"3D_bib.h"
 

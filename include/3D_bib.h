@@ -1,16 +1,28 @@
-
+#ifndef BIB
+#define BIB
 //#include <GL/glut.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include <time.h>
 
+#include <stack>
+#include "iostream"
+using namespace std;
+
+
+class Matriz{
+    public:
+    float M[4][4];
+};
+
 class Operaciones3D{
       public:
         //Variables para matrices de rotacion y traslación
-        float T[4][4], R[4][4], A[4][4];
+        float T[4][4], R[4][4], A[4][4], E[4][4];
         //Variables para operaciones trigonometricas
         float pi,d;
+        Matriz *tmp;
         Operaciones3D();
 
         //Transformacion de grados a radianes
@@ -20,19 +32,20 @@ class Operaciones3D{
         float DegToRad(float g);
         //Funcion para cargar la matriz identidad en la matriz que se recibe como parametro
         void LoadIdentity(float M[][4]);
+        void LoadIdentity();
         //Funcion que carga el vector de traslacion en la matriz T
         void translate(float x, float y, float z);
-        //Funcion que define la matriz de rotacion con rspecto al eje X
+        //Funcion que define la matriz de rotacion con respecto al eje X
         void rotateX(float deg);
-        //Funcion que define la matriz de rotacion con rspecto al eje X(Rotacion Libre)
+        //Funcion que define la matriz de rotacion con respecto al eje X(Rotacion Libre)
         void rotateX(float b,float c,bool bandera);
         void rotateXITheta(float deg);
         void rotateYITheta(float deg);
-        //Funcion que define la matriz de rotacion con rspecto al eje Y
+        //Funcion que define la matriz de rotacion con respecto al eje Y
         void rotateY(float deg);
-        //Funcion que define la matriz de rotacion con rspecto al eje Y(Rotacion libre)
+        //Funcion que define la matriz de rotacion con respecto al eje Y(Rotacion libre)
         void rotateYL(float a,bool bandera);
-        //Funcion que define la matriz de rotacion con rspecto al eje Z
+        //Funcion que define la matriz de rotacion con respecto al eje Z
         void rotateZ(float deg);
         //Funcion que multiplica la matriz M1 con la matriz M2, donde el resultado es Res
         void MultM(float M1[][4], float M2[][4], float Res[][4]);
@@ -50,4 +63,11 @@ class Operaciones3D{
         //p1 y p2 y theta grados en sentido contrario a las manecillas del reloj
         //La matriz resultante queda almacenada en la matriz A
         void RotacionLibre(float theta, float p1[3], float p2[3]);
+
+        //Pila
+        stack<Matriz *> pila;
+        void copia_R_A();
+        void Push();
+        void Pop();
 };
+#endif // BIB

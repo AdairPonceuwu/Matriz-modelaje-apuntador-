@@ -1,4 +1,5 @@
 #include "3D_bib.h"
+#include "Piramide.h"
 #include <GL/glut.h>
 
 //Variables dimensiones de la pantalla
@@ -29,12 +30,14 @@ float Z_MAX=20;
 
 //Se declara el objeto para utilizar las operaciones 3D
 Operaciones3D Op3D;
+Piramide myPyramid(&Op3D);
 
 float Theta=0;
 //Variables para la definicion de objetos
-float P1[3]={0.0,0.0,0.0};
-float P2[3]={10.0,0.0,0.0};
-float points[5][3]={{0,0,2},{2,0,2},{2,0,0},{0,0,0},{1,1.5,1}};
+float P1[3]={-5.0,1.0,4.0};
+float P2[3]={2.0,6.0,3.0};
+float VT[3]={-1.0,0.0,0.0};
+
 
 
 void drawAxis()
@@ -66,98 +69,15 @@ void drawAxis()
      glLineWidth(1.0);
  }
 
-/////////////////////////////////////////////////////////////////////////////
-//funciones de objetos
-/////////////////////////////////////////////////////////////////////////////
-float Norma(float p1[3], float p2[3])
-{
-      float n=0;
-      int i;
-      for(i=0;i<3;i++)
-        n += pow(p2[i]-p1[i],2);
-      return(sqrt(n));
-}
-
-void ImprimeMallaPiramide(int k)
-{
-     int i,j;
-     float U[3],d,norma;
-     for(i=0;i<3;i++)
-     {
-        norma = Norma(points[i],points[i+1]);
-        d = norma/(float)k;
-        U[0] = (points[i+1][0]-points[i][0])/norma;
-        U[1] = (points[i+1][1]-points[i][1])/norma;
-        U[2] = (points[i+1][2]-points[i][2])/norma;
-        for(j = 1; j < k; j++)
-        {
-           glBegin(GL_LINES);
-             glVertex3f(points[4][0],points[4][1],points[4][2]);
-             glVertex3f(points[i][0]+U[0]*d*j,points[i][1]+U[1]*d*j,points[i][2]+U[2]*d*j);
-           glEnd();
-        }
-     }
-     norma = Norma(points[i],points[0]);
-     d = norma /(float)k;
-     U[0] = (points[0][0]-points[i][0])/norma;
-     U[1] = (points[0][1]-points[i][1])/norma;
-     U[2] = (points[0][2]-points[i][2])/norma;
-     for(j = 1; j < k; j++)
-        {
-           glBegin(GL_LINES);
-             glVertex3f(points[4][0],points[4][1],points[4][2]);
-             glVertex3f(points[i][0]+U[0]*d*j,points[i][1]+U[1]*d*j,points[i][2]+U[2]*d*j);
-           glEnd();
-        }
-
-}
-
-void ImprimePiramide()
-{   int i;
-    glBegin(GL_LINE_LOOP);
-      for(i=0;i<4;i++)
-        glVertex3f(points[i][0],points[i][1],points[i][2]);
-    glEnd();
-    glBegin(GL_LINES);
-      for(i=0;i<4;i++){
-        glVertex3f(points[4][0],points[4][1],points[4][2]);
-        glVertex3f(points[i][0],points[i][1],points[i][2]);
-        }
-    glEnd();
-    ImprimeMallaPiramide(20);
- }
 
 
-//Rotacion paralela
-//rota a la piramide theta grados, donde el eje de rotacion se encuentra
-//a una distancia distA-distB del eje seleccionado (ejeXYZ)
-void RotacionPiramide(char ejeXYZ, float theta, float distA, float distB)
-{
-     //se prepara la matriz de operaciones A: T^(-1)R(T)
-     Op3D.RotacionParalela(ejeXYZ,theta,distA,distB);
-     //se aplica A a cada punto de la piramide
-     Op3D.MatObject(Op3D.A,5,points);
-}
-
-//Rotacion libre
-void RotacionPiramide(float theta, float p1[3], float p2[3])
-{
-     //se imprime el eje de rotacion
-     glColor3f(1.0,1.0,1.0);
-     glBegin(GL_LINES);
-       glVertex3f(p1[0],p1[1],p1[2]);
-       glVertex3f(p2[0],p2[1],p2[2]);
-     glEnd();
-    glColor3f(1.0,1.0,1.0);
-    Op3D.RotacionLibre(theta,p1,p2);
-    Op3D.MatObject(Op3D.A,5,points);
-}
 
 //-------------------------------------------------------------------------
 //funciones callbacks
 void idle(void)
 {
-  glutPostRedisplay();
+    Sleep(20);
+    glutPostRedisplay();
 }
 
 void reshape(int width, int height)
@@ -184,15 +104,21 @@ void reshape(int width, int height)
 
 void display()
 {
+    //Inicializando el ambiente
     glClear(GL_COLOR_BUFFER_BIT);
     drawAxis();
+    Op3D.LoadIdentity();
     glColor3f(1.0f,1.0f,1.0f);
-    //se rota la piramide Theta grados con respecto al eje de rotacion
-    //a una distancia definida por el usuario
-    RotacionPiramide(Theta,P1,P2);
-    //Rotacion paralela
-    //RotacionPiramide('Z',Theta,0,0);
-    ImprimePiramide();
+
+    //Control de pila para animacion
+    Op3D.Push();
+    myPyramid.drawPiramide();
+    Op3D.RotacionLibre(180,P1,P2);
+    //ImprimePiramide();
+    Op3D.Pop();
+
+    //Buffers
+    glFlush();
     glutSwapBuffers();
 }
 
@@ -206,6 +132,7 @@ void init()
     gluLookAt(EYE_X,EYE_Y,EYE_Z,CENTER_X,CENTER_Y,CENTER_Z,UP_X,UP_Y,UP_Z);
     glClearColor(0,0,0,0);
     Theta=1;
+
 }
 
 int main(int argc, char **argv)
@@ -214,7 +141,7 @@ int main(int argc, char **argv)
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowPosition(50, 50);
     glutInitWindowSize(WIDTH, HEIGTH);
-    glutCreateWindow("Triangulo a color");
+    glutCreateWindow("Matriz de modelado con pila");
     init();
     glutDisplayFunc(display);
     glutIdleFunc(idle);
