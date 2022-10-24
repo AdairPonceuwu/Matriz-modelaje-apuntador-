@@ -1,6 +1,9 @@
 #include "3D_bib.h"
 #include <iterator>
 #include <cmath>
+
+
+
 using std::pow; using std::ostream_iterator;
 
 Operaciones3D::Operaciones3D()
@@ -21,6 +24,21 @@ float Operaciones3D::RadToDeg(float r)
 float Operaciones3D::DegToRad(float g)
 {
       return ((g*pi)/180);
+}
+//Multiplicacion de matrices
+void Operaciones3D::MultM(float M1[][4], float M2[][4], float Res[][4])
+{
+  float tmp[4][4];
+  int i,j,k;
+  for(i=0; i<4;i++)
+     for(j=0;j<4;j++){
+        tmp[i][j]=0;
+        for(k=0;k<4;k++)
+           tmp[i][j]+=M1[i][k]*M2[k][j];
+     }
+  for(i=0;i<4;i++)
+     for(j=0;j<4;j++)
+        Res[i][j] = tmp[i][j];
 }
 
 void Operaciones3D::LoadIdentity(float M[][4])
@@ -45,15 +63,33 @@ void Operaciones3D::LoadIdentity(float M[][4])
          A[i][j]=0;
  }
 
-
+//Traslacion
 void Operaciones3D::translate(float x, float y, float z)
 {
   LoadIdentity(T);
   T[0][3]=x;
   T[1][3]=y;
   T[2][3]=z;
- }
-
+}
+void Operaciones3D::translateA()
+{
+    MultM(A,T,A);
+}
+//Escalado
+void Operaciones3D::scalate(float x,float y, float z,float p1[3])
+{
+    LoadIdentity(E);
+    E[0][0]=x;
+    E[1][1]=y;
+    E[2][2]=z;
+    E[0][3]=((1-x)*p1[0]);
+    E[1][3]=((1-y)*p1[1]);
+    E[2][3]=((1-z)*p1[2]);
+}
+void Operaciones3D::scalateA()
+{
+    MultM(A,E,A);
+}
  //Rotacion paralela
 void Operaciones3D::rotateX(float deg)
 {
@@ -135,20 +171,6 @@ void Operaciones3D::rotateYL(float a,bool bandera)
  }
 
 
-void Operaciones3D::MultM(float M1[][4], float M2[][4], float Res[][4])
-{
-  float tmp[4][4];
-  int i,j,k;
-  for(i=0; i<4;i++)
-     for(j=0;j<4;j++){
-        tmp[i][j]=0;
-        for(k=0;k<4;k++)
-           tmp[i][j]+=M1[i][k]*M2[k][j];
-     }
-  for(i=0;i<4;i++)
-     for(j=0;j<4;j++)
-        Res[i][j] = tmp[i][j];
-}
 
 //multiplica la matriz m por el punto p y regresa el resultado en el punto p
 void Operaciones3D::MatPoint(float m[][4], float p[3])
@@ -254,10 +276,7 @@ void Operaciones3D::RotacionLibre(float theta, float p1[3], float p2[3])
     }
 }
 
-void Operaciones3D::copia_R_A()
-{
 
-}
 
 void Operaciones3D::Push()
 {

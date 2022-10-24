@@ -33,8 +33,12 @@ class Operaciones3D{
         //Funcion para cargar la matriz identidad en la matriz que se recibe como parametro
         void LoadIdentity(float M[][4]);
         void LoadIdentity();
+        //Funcion para escalado
+        void scalate(float x,float y, float z,float p1[3]);
+        void scalateA();
         //Funcion que carga el vector de traslacion en la matriz T
         void translate(float x, float y, float z);
+        void translateA();
         //Funcion que define la matriz de rotacion con respecto al eje X
         void rotateX(float deg);
         //Funcion que define la matriz de rotacion con respecto al eje X(Rotacion Libre)

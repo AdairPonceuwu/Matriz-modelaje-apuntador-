@@ -28,8 +28,7 @@ class Piramide
         float Norma(float p1[3], float p2[3]);
         void ImprimeMallaPiramide(int k);
         void drawPiramide();
-        //modificaciones(Rotacion, traslacion, etc)
-        void RotacionPiramide(float theta, float p1[3], float p2[3]);
+
 };
 
 #endif // PIRAMIDE

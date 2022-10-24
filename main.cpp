@@ -2,6 +2,10 @@
 #include "Piramide.h"
 #include <GL/glut.h>
 
+#include <conio.h>
+#include <iostream>
+#include <windows.h>
+using namespace std;
 //Variables dimensiones de la pantalla
 int WIDTH=500;
 int HEIGTH=500;
@@ -30,12 +34,16 @@ float Z_MAX=20;
 
 //Se declara el objeto para utilizar las operaciones 3D
 Operaciones3D Op3D;
-Piramide myPyramid(&Op3D);
+Piramide myPyramid(&Op3D),myPyramid2(&Op3D),myPyramid3(&Op3D),myPyramid4(&Op3D);
 
 float Theta=0;
 //Variables para la definicion de objetos
-float P1[3]={-5.0,1.0,4.0};
-float P2[3]={2.0,6.0,3.0};
+float P1[3]={5.0,2.0,6.0};
+float P2[3]={4.0,3.0,8.0};
+float AxisX[3]={-1.0,0.0,0.0};
+float AxisZ[3]={0.0,0.0,-1.0};
+float AxisY[3]={0.0,1.0,0.0};
+float origin[3]={0.0,0.0,0.0};
 float VT[3]={-1.0,0.0,0.0};
 
 
@@ -112,11 +120,32 @@ void display()
 
     //Control de pila para animacion
     Op3D.Push();
+    Op3D.RotacionLibre(Theta,AxisX,origin);
+    Op3D.translate(VT[0],VT[1],VT[2]);
+    Op3D.translateA();
     myPyramid.drawPiramide();
-    Op3D.RotacionLibre(180,P1,P2);
-    //ImprimePiramide();
     Op3D.Pop();
+    Op3D.Push();
+    Op3D.RotacionLibre(Theta,AxisY,origin);
+    Op3D.translate(VT[0]+1,VT[1]-1,VT[2]);
+    Op3D.translateA();
+    /*Op3D.RotacionLibre(Theta,AxisY,origin);
+    Op3D.scalate(1.2,1.2,1.2,AxisY);
+    Op3D.scalateA();*/
+    myPyramid2.drawPiramide();
+    Op3D.Pop();
+    Op3D.Push();
+    Op3D.RotacionLibre(Theta,AxisZ,origin);
+    Op3D.translate(VT[0]+1,VT[1],VT[2]-1);
+    Op3D.translateA();
+    myPyramid3.drawPiramide();
+    Op3D.Pop();
+    Op3D.RotacionLibre(Theta,P1,P2);
+    Op3D.translate(VT[0]+1,VT[1]+1,VT[2]);
+    Op3D.translateA();
+    myPyramid4.drawPiramide();
 
+    Sleep(80);
     //Buffers
     glFlush();
     glutSwapBuffers();
@@ -131,8 +160,7 @@ void init()
     glLoadIdentity();
     gluLookAt(EYE_X,EYE_Y,EYE_Z,CENTER_X,CENTER_Y,CENTER_Z,UP_X,UP_Y,UP_Z);
     glClearColor(0,0,0,0);
-    Theta=1;
-
+    Theta=50;
 }
 
 int main(int argc, char **argv)

@@ -76,3 +76,4 @@ void Piramide::drawPiramide()
     ImprimeMallaPiramide(20);
  }
 
+
