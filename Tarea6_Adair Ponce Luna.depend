@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1666491748 source:d:\codeblocks\mingw\proyectos\tarea6_adair ponce luna\main.cpp
+1666656472 source:d:\codeblocks\mingw\proyectos\tarea6_adair ponce luna\main.cpp
 	"3D_bib.h"
 	"Piramide.h"
 	<GL/glut.h>
@@ -7,7 +7,7 @@
 	<iostream>
 	<windows.h>
 
-1666484993 d:\codeblocks\mingw\proyectos\tarea6_adair ponce luna\include\3d_bib.h
+1666655854 d:\codeblocks\mingw\proyectos\tarea6_adair ponce luna\include\3d_bib.h
 	<stdlib.h>
 	<stdio.h>
 	<math.h>
@@ -29,7 +29,7 @@
 	<GL/glu.h>
 	<stdlib.h>
 
-1666486940 source:d:\codeblocks\mingw\proyectos\tarea6_adair ponce luna\src\3d_bib.cpp
+1666655929 source:d:\codeblocks\mingw\proyectos\tarea6_adair ponce luna\src\3d_bib.cpp
 	"3D_bib.h"
 	<iterator>
 	<cmath>

@@ -22,6 +22,7 @@ class Operaciones3D{
         float T[4][4], R[4][4], A[4][4], E[4][4];
         //Variables para operaciones trigonometricas
         float pi,d;
+        float x=0;
         Matriz *tmp;
         Operaciones3D();
 

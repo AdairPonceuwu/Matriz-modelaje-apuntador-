@@ -127,11 +127,10 @@ void display()
     Op3D.Pop();
     Op3D.Push();
     Op3D.RotacionLibre(Theta,AxisY,origin);
-    Op3D.translate(VT[0]+1,VT[1]-1,VT[2]);
-    Op3D.translateA();
-    /*Op3D.RotacionLibre(Theta,AxisY,origin);
-    Op3D.scalate(1.2,1.2,1.2,AxisY);
-    Op3D.scalateA();*/
+    Op3D.scalate(3,3,3,AxisY);
+    Op3D.scalateA();
+    /*Op3D.translate(VT[0]+1,VT[1]-1,VT[2]);
+    Op3D.translateA();*/
     myPyramid2.drawPiramide();
     Op3D.Pop();
     Op3D.Push();
@@ -145,7 +144,7 @@ void display()
     Op3D.translateA();
     myPyramid4.drawPiramide();
 
-    Sleep(80);
+    Sleep(100);
     //Buffers
     glFlush();
     glutSwapBuffers();
