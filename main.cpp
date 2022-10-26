@@ -144,7 +144,7 @@ void display()
     Op3D.translateA();
     myPyramid4.drawPiramide();
 
-    Sleep(100);
+    Sleep(80);
     //Buffers
     glFlush();
     glutSwapBuffers();

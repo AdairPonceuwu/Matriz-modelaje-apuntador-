@@ -22,10 +22,9 @@ class Operaciones3D{
         float T[4][4], R[4][4], A[4][4], E[4][4];
         //Variables para operaciones trigonometricas
         float pi,d;
-        float x=0;
+        float e=0;
         Matriz *tmp;
         Operaciones3D();
-
         //Transformacion de grados a radianes
         //recordar que (pi/180 = r/g) donde "r" son radianes y "g" grados
         //se aplica la formula r
@@ -71,7 +70,6 @@ class Operaciones3D{
 
         //Pila
         stack<Matriz *> pila;
-        void copia_R_A();
         void Push();
         void Pop();
 };

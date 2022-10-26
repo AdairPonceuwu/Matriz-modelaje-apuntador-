@@ -4,10 +4,6 @@
 Piramide::Piramide(Operaciones3D *data)
 {
     Op3D=data;
-    edo_rotate = FALSE;
-    edo_translate = FALSE;
-    state = FALSE;
-    Op3D->LoadIdentity(myA);
 }
 
 Piramide::~Piramide()

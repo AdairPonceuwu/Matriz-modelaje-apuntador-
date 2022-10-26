@@ -88,11 +88,11 @@ void Operaciones3D::scalate(float x,float y, float z,float p1[3])
 }
 void Operaciones3D::scalateA()
 {
-    if(x==0){
+    if(e==0){
         MultM(A,E,A);
-        x++;
+        e++;
     }else
-        x++;
+        e++;
 }
  //Rotacion paralela
 void Operaciones3D::rotateX(float deg)
